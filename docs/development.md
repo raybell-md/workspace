@@ -135,3 +135,15 @@ node scripts/auth-utils.js <command>
 - `expire`: Force the access token to expire (for testing refresh).
 - `status`: Show current authentication status.
 - `help`: Show the help message.
+
+## Testing with Gemini CLI
+
+To test the extension against the Gemini CLI, you can use the following commands:
+
+```bash
+gemini extensions uninstall workspace
+npm install
+npm run build
+gemini extensions link .
+gemini extensions list
+```
