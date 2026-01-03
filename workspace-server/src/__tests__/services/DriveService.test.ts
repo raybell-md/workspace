@@ -127,6 +127,31 @@ describe('DriveService', () => {
 
       expect(JSON.parse(result.content[0].text)).toEqual({ error: 'API request failed' });
     });
+
+    describe('createFolder', () => {
+        it('should create a folder with the correct parameters', async () => {
+            const folderName = 'Test Folder';
+            const parentFolderId = 'parent-id';
+            const mockFilesCreate = jest.fn().mockResolvedValue({
+                data: { id: 'new-folder-id' }
+            } as never);
+            (google.drive as jest.Mock).mockReturnValue({
+                files: {
+                    create: mockFilesCreate
+                }
+            });
+            const response = await driveService.createFolder({ folderName, parentFolderId });
+            expect(mockFilesCreate).toHaveBeenCalledWith({
+                requestBody: {
+                    name: folderName,
+                    mimeType: 'application/vnd.google-apps.folder',
+                    parents: [parentFolderId]
+                },
+                fields: 'id'
+            });
+            expect(response.content[0].text).toEqual(JSON.stringify({ id: 'new-folder-id' }));
+        });
+    });
   });
 
   describe('search', () => {
